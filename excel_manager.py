@@ -38,7 +38,7 @@ def salvar_dados(metricas):
             ws = wb["Resumo"]
 
     nova_linha = [metricas.get(col, None) for col in COLUNAS]
-    ws.append(nova_linha)
+    ws.append(nova_linha) 
 
     if ws["H1"].value is None:
         for i, valor in enumerate(COLUNAS_RESUMO):
@@ -61,6 +61,14 @@ def salvar_dados(metricas):
                 name="TableStyleLight8",
                 showRowStripes=True
             )
+            linha = ws.max_row
+
+            # EXP
+            ws[f"H2"].number_format = '#,##0'
+            ws[f"I2"].number_format = '#,##0'
+            ws[f"J2"].number_format = '[h]:mm'
+            ws[f"K2"].number_format = '#,##0'
+
 
             ws.add_table(tabela_kpi)
 
@@ -82,7 +90,35 @@ def salvar_dados(metricas):
         )
 
         ws.add_table(tabela)
+    linha = ws.max_row
 
+# EXP
+    ws[f"B{linha}"].number_format = '#,##0'
+
+    # LOOT
+    ws[f"C{linha}"].number_format = '#,##0'
+
+    # PROFIT
+    ws[f"D{linha}"].number_format = '#,##0'
+
+    # TEMPO
+    ws[f"E{linha}"].number_format = '[h]:mm'
+
+    # EXP/HORA
+    ws[f"F{linha}"].number_format = '#,##0'
+    
+    for coluna in ws.columns:
+        tamanho = 0
+        letra = coluna[0].column_letter
+
+        for celula in coluna:
+            try:
+                if len(str(celula.value)) > tamanho:
+                    tamanho = len(str(celula.value))
+            except:
+                pass
+
+        ws.column_dimensions[letra].width = tamanho + 2
     wb.save(ARQUIVO_EXCEL)
     print("[OK] Dados salvos na aba Resumo")
 
@@ -116,6 +152,7 @@ def salvar_loot(loot_lista, hunt_id):
     if ws["I1"].value is None:
         ws["I1"] = "Total"
         ws["I2"] = "=SUM(F:F)"
+        ws[f"I2"].number_format = '#,##0'
 
     # Criar/garantir tabela do KPI
     tabela_kpi = ws.tables.get("TabelaLootKPI")
@@ -152,7 +189,7 @@ def salvar_loot(loot_lista, hunt_id):
     # TABELA LOOT (dados)
     # =========================
     ultima_linha = ws.max_row
-
+    
     tabela = ws.tables.get("TabelaLoot")
 
     if tabela:
@@ -169,6 +206,15 @@ def salvar_loot(loot_lista, hunt_id):
         )
 
         ws.add_table(tabela)
+    for linha in range(2, ultima_linha + 1):
+        # Quantidade
+        ws[f"C{linha}"].number_format = '#,##0'
+
+        # Valor Unidade
+        ws[f"E{linha}"].number_format = '#,##0'
+
+        # Valor Total
+        ws[f"F{linha}"].number_format = '#,##0'
 
     wb.save(ARQUIVO_EXCEL)
     print("[OK] Loot salvo com sucesso")
