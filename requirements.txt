@@ -1,11 +1,4 @@
 pandas
 watcher
-quote
-time
 requests
-Observer
-shutil
-json
-os
 openpyxl
-datetime
