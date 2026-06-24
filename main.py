@@ -1,9 +1,9 @@
 try:
-    from watcher import iniciar_monitoramento
+    from core.watcher import iniciar_monitoramento
     from config import PASTA_JSON
 
 except ModuleNotFoundError:
-    from dependencias import instalar_dependencias
+    from utils.depedencias import instalar_dependencias
 
     instalar_dependencias()
 
